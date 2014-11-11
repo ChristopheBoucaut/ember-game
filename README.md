@@ -1,5 +1,4 @@
-
-* npm install --save-dev ember-localstorage-adapter# Ember-game``
+# Ember-game
 
 This README outlines the details of collaborating on this Ember application.
 
