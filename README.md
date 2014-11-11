@@ -1,4 +1,5 @@
-# Ember-game
+
+* npm install --save-dev ember-localstorage-adapter# Ember-game``
 
 This README outlines the details of collaborating on this Ember application.
 
@@ -17,6 +18,7 @@ You will need the following things properly installed on your computer.
 * change into the new directory
 * `npm install`
 * `bower install`
+* `npm install --save-dev ember-localstorage-adapter`
 
 ## Running / Development
 
