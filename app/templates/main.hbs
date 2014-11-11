@@ -1,0 +1,7 @@
+{{outlet}}
+
+<form {{action "addUser" this on="submit"}}>
+    <label>name : </label>{{ input type="text" value=name }}
+    <label>score : </label>{{ input type="text" value=score }}
+    <input type="submit">
+</form>
