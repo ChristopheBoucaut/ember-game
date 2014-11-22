@@ -1,7 +1,13 @@
 {{outlet}}
 
-<form {{action "addUser" this on="submit"}}>
+<!-- <form {{action "addUser" this on="submit"}}>
     <label>name : </label>{{ input type="text" value=name }}
     <label>score : </label>{{ input type="text" value=score }}
     <input type="submit">
-</form>
+</form> -->
+
+<div id="game">
+    <a class="start-game" {{action "startGame"}}></a>
+</div>
+<div id="score">score : {{ model.score }}</div>
+<div id="bottle">bottle : {{ model.life }}</div>

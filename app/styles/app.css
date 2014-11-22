@@ -1,3 +1,59 @@
-html, body {
-  margin: 20px;
+#game,
+#score,
+#bottle {
+    float:left;
+    border: 1px solid pink;
+    padding: 10px;
+}
+
+#game {
+    width: 50%;
+    min-width: 400px;
+    height: 400px;
+    background-image: url("img/background_global.png");
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+}
+
+#game .start-game {
+    background-image: url("img/button_start.png");
+    display: block;
+    width: 454px;
+    max-width: 100%;
+    height: 318px;
+    cursor: pointer;
+    margin: auto;
+    margin-top: 41px;
+}
+
+#game .start-in-progress {
+    margin: auto;
+    background-image: url("img/in_progress.gif");
+    background-position: 0px 20px;
+    background-repeat: no-repeat;
+    width: 250px;
+    height: 244px;
+    padding-top: 20px;
+    margin-top: 80px;
+}
+
+#game .poney {
+    height: 50px;
+    width: 50px;
+    position: absolute;
+    top: 0%;
+}
+
+#score,
+#bottle {
+    width:26%;
+    min-width: 200px;
+    height: 200px;
+}
+
+#score {
+}
+
+#bottle {
 }
