@@ -12,7 +12,13 @@ var poney = Ember.Object.extend(Ember.Evented, {
             imgPoney.css("right", 100-horizontalPosition+"%");
         }
         imgPoney.attr("src", "/assets/img/poney_fall.gif");
-        
+        imgPoney.click(function(e) {
+            e.preventDefault();
+            $(this).stop();
+            this.remove();
+            currentPoney.trigger("poneySafe");
+        });
+
         var currentPoney = this;
         imgPoney[0].onload = function() {
             currentPoney.move(imgPoney);
@@ -21,22 +27,20 @@ var poney = Ember.Object.extend(Ember.Evented, {
         $("#game").append(imgPoney);
     },
     move: function(imgPoney) {
-        var transitionEnd = function() {
-            console.log(this);
-            this.remove();
-        }
-        imgPoney.on("transitionend", transitionEnd);
-        imgPoney.on("webkitTransitionEnd", transitionEnd);
-        imgPoney.css("-webkit-transition", "3s linear");
-        imgPoney.css("-moz-transition", "3s linear");
-        imgPoney.css("-ms-transition", "3s linear");
-        imgPoney.css("-o-transition", "3s linear");
-        imgPoney.css("transition", "3s linear");
-        imgPoney.css("top", "100%");
-        imgPoney.addClass("move");
-    },
-    test: function() {
-        this.get("managerGame").upScore();
+        var currentPoney = this;
+        var timeToMove = 5000-this.get("score")*20;
+        timeToMove = timeToMove > 0 ? timeToMove : 0;
+        imgPoney.animate(
+            {
+                top: "100%"
+            },
+            timeToMove,
+            "linear",
+            function() {
+                this.remove();
+                currentPoney.trigger("poneyDie");
+            }
+        );
     }
 });
 
@@ -46,15 +50,15 @@ var managerGame = Ember.Object.extend(Ember.Evented, {
     poneyDie: 0,
     inProgress: function() {
         var currentManager = this;
-        var timeBeforeStart = 1;
+        var timeBeforeStart = 5;
         $("#game button.start-game").remove();
         $("#game").html("<div class='start-in-progress'>Start in "+timeBeforeStart+" sec</div>");
         var changeTextBeforeStart = function() {
             setTimeout(
                 function() {
+                    timeBeforeStart--;
                     $("#game > div").text("Start in "+timeBeforeStart+" sec");
                     if (timeBeforeStart > 0) {
-                        timeBeforeStart--;
                         changeTextBeforeStart();
                     } else {
                         currentManager.trigger("inProgressFinished");
@@ -69,17 +73,18 @@ var managerGame = Ember.Object.extend(Ember.Evented, {
         $("#game").html("");
         var currentManager = this;
         var runStepGame = function() {
+            var timeToPop = 1000-currentManager.poneyDie*2;
+            timeToPop = timeToPop > 0 ? timeToPop : 0;
             setTimeout(
                 function() {
                     currentManager.generatePoney();
-                    currentManager.looseOneLife();
                     if (!currentManager.isLoose()) {
                         runStepGame();
                     } else {
                         currentManager.trigger("gameOver");
                     }
                 },
-                1000-currentManager.poneyDie
+                timeToPop
             );
         }
         runStepGame();
@@ -90,7 +95,7 @@ var managerGame = Ember.Object.extend(Ember.Evented, {
         this.trigger("changeLife");
     },
     winOneLife: function() {
-        if (this.isLoose) {
+        if (this.isLoose()) {
             return;
         }
         this.life++;
@@ -104,7 +109,19 @@ var managerGame = Ember.Object.extend(Ember.Evented, {
         return this.life <= 0 ? true : false;
     },
     generatePoney: function() {
-        var newPoney = poney.create({managerGame: this});
+        var managerGame = this;
+        var newPoney = poney.create({score: this.score});
+
+        // Poney is die.
+        newPoney.on("poneyDie", function() {
+            managerGame.looseOneLife();
+        });
+
+        // Poney is safe.
+        newPoney.on("poneySafe", function() {
+            managerGame.winOneLife();
+            managerGame.upScore();
+        });
         newPoney.generatePoney();
     }
 });
@@ -128,18 +145,18 @@ export default Ember.Controller.extend({
             });
             
             // event on gameover.
-            // this.managerGame.on("gameOver", function() {
-            //     // ask name and register score.
-            //     var name = prompt("Please enter your name", "Pinkie Pie");
-            //     if (name != null) {
-            //         var newUser = mainController.store.createRecord('user', {
-            //             name: name,
-            //             score: this.score
-            //         });
-            //         newUser.save();
-            //     }
-            //     mainController.transitionToRoute("scores");
-            // });
+            this.managerGame.on("gameOver", function() {
+                // ask name and register score.
+                var name = prompt("Please enter your name", "Pinkie Pie");
+                if (name != null) {
+                    var newUser = mainController.store.createRecord('user', {
+                        name: name,
+                        score: this.score
+                    });
+                    newUser.save();
+                }
+                mainController.transitionToRoute("scores");
+            });
 
             // start game.
             this.managerGame.on("inProgressFinished", function() {

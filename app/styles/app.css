@@ -42,7 +42,8 @@
     height: 50px;
     width: 50px;
     position: absolute;
-    top: 0%;
+    top: -55px;
+    cursor: pointer;
 }
 
 #score,
