@@ -9,5 +9,14 @@
 <div id="game">
     <a class="start-game" {{action "startGame"}}></a>
 </div>
-<div id="score">score : {{ model.score }}</div>
-<div id="bottle">bottle : {{ model.life }}</div>
+<div id="score">Poney sauvés : {{ model.score }}</div>
+<div id="bottle">Vie : {{ model.life }}</div>
+<div id="rules">
+    <h3>Règles :</h3>
+    <ol>
+        <li>Sauvez les poneys pour augmenter votre score !</li>
+        <li>Si un poney tombe au sol, vous perdez une vie.</li>
+        <li>Si vous sauvez un poney, vous gagnez une vie.</li>
+        <li>Le jeu s'arrête lorsque vous n'avez plus de vie.</li>
+    </ol>
+</div>

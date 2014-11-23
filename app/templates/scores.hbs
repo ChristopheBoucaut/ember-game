@@ -1,3 +1,8 @@
 {{outlet}}
 
-ee
+<button {{action "clearScores"}}>Clear score</button>
+<ol class="">
+{{#each user in arrangedContent}}
+    <li>{{ user.name }} - {{ user.score }}</li>
+{{/each}}
+</ol>

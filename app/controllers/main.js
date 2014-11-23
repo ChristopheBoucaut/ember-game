@@ -1,6 +1,5 @@
 import Ember from 'ember';
 
-
 var poney = Ember.Object.extend(Ember.Evented, {
     generatePoney: function() {
         var imgPoney = $("<img>");
