@@ -114,8 +114,8 @@ var managerGame = Ember.Object.extend(Ember.Evented, {
             setTimeout(
                 function() {
                     // generate one poney.
-                    currentManager.generatePoney();
                     if (!currentManager.isLoose()) {
+                        currentManager.generatePoney();
                         // no loose ? run next step.
                         runStepGame();
                     } else {
@@ -178,19 +178,33 @@ var managerGame = Ember.Object.extend(Ember.Evented, {
             managerGame.upScore();
         });
         newPoney.generatePoney();
+    },
+    stopGame: function() {
+        this.life = 0;
+        $("#game img").each(function() {
+            $(this).stop();
+            $(this).remove();
+        });
     }
 });
 
 export default Ember.Controller.extend({
     managerGame: null,
+    gameIsStopped: false,
     actions: {
         /**
          * Action to start game.
          */
         startGame: function() {
+            this.gameIsStopped = false;
             var mainController = this;
             this.managerGame = managerGame.create();
             mainController.set('model.life', this.managerGame.life);
+
+            $("#menu a").click(function() {
+                mainController.gameIsStopped = true;
+                mainController.managerGame.stopGame();
+            });
 
             // life change.
             this.managerGame.on("changeLife", function() {
@@ -205,15 +219,17 @@ export default Ember.Controller.extend({
             // event on gameover.
             this.managerGame.on("gameOver", function() {
                 // ask name and register score.
-                var name = prompt("Please enter your name", "Pinkie Pie");
-                if (name != null) {
-                    var newUser = mainController.store.createRecord('user', {
-                        name: name,
-                        score: this.score
-                    });
-                    newUser.save();
+                if(!mainController.gameIsStopped) {
+                    var name = prompt("Please enter your name", "Pinkie Pie");
+                    if (name != null) {
+                        var newUser = mainController.store.createRecord('user', {
+                            name: name,
+                            score: this.score
+                        });
+                        newUser.save();
+                    }
+                    mainController.transitionToRoute("scores");
                 }
-                mainController.transitionToRoute("scores");
             });
 
             // start game.
