@@ -17,7 +17,6 @@ You will need the following things properly installed on your computer.
 * change into the new directory
 * `npm install`
 * `bower install`
-* `npm install --save-dev ember-localstorage-adapter`
 
 ## Running / Development
 
