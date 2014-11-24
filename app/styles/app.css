@@ -14,6 +14,11 @@
     background-position: center;
     position: relative;
     overflow: hidden;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: -moz-none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 #game .start-game {
@@ -44,6 +49,11 @@
     position: absolute;
     top: -55px;
     cursor: pointer;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: -moz-none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 #score,
